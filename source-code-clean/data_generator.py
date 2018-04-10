@@ -12,11 +12,11 @@ def get_pair(img_path, mask_path):
 
 def batch_generator(batch_size, train = True):
     if train:
-        img_filenames = glob.glob('/notebooks/b.irina/AxSegmenta/Data/Images_patch_224/train/images/control_raw_*')
-        mask_filenames = glob.glob('/notebooks/b.irina/AxSegmenta/Data/Masks_patch_224/train/images/control_raw_*')
+        img_filenames = glob.glob('/notebooks/b.irina/AxSegmenta/Data/train/images/control_raw_*')
+        mask_filenames = glob.glob('/notebooks/b.irina/AxSegmenta/Data/train/images/control_raw_*')
     else:
-        img_filenames = glob.glob('/notebooks/b.irina/AxSegmenta/Data/Images_patch_224/valid/images/control_raw_*')
-        mask_filenames = glob.glob('/notebooks/b.irina/AxSegmenta/Data/Masks_patch_224/valid/images/control_raw_*')
+        img_filenames = glob.glob('/notebooks/b.irina/AxSegmenta/Data/valid/images/control_raw_*')
+        mask_filenames = glob.glob('/notebooks/b.irina/AxSegmenta/Data/valid/images/control_raw_*')
 
     paired_filenames = list(zip(img_filenames, mask_filenames))
     np.random.shuffle(paired_filenames)
