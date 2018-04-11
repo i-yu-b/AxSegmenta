@@ -10,7 +10,7 @@ from keras import __version__
 
 from model import *
 from losses import *
-from data_generation import *
+from data_generator import *
 
 def train_unet():
     out_model_path = '/notebooks/b.irina/AxSegmenta/checkpoints/unet_224.h5'
