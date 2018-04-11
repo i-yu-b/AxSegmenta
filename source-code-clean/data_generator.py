@@ -1,3 +1,7 @@
+'''
+    Custom simple data generator
+'''
+
 import numpy as np
 from cv2 import imread
 import glob
