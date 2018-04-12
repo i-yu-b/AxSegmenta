@@ -71,7 +71,7 @@ def unet_224(dropout_val=0.0, batch_norm=True):
     up_conv_224 = double_conv_layer(up_224, filters, 0, batch_norm)
 
     conv_final = Conv2D(1, (1, 1))(up_conv_224)
-   # conv_final = BatchNormalization(axis=axis)(conv_final)
+    conv_final = BatchNormalization(axis=axis)(conv_final)
     conv_final = Activation('sigmoid')(conv_final)
 
     model = Model(inputs, conv_final, name="unet_224")
