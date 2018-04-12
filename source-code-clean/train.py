@@ -13,8 +13,8 @@ from losses import *
 from data_generator import *
 
 def train_unet():
-    out_model_path = '/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_with_pretrain.h5'
-    pretrain_model_path = '/notebooks/b.irina/AxSegmenta/ZF_UNET_224_Pretrained_Model-master/zf_unet_224.h5'
+    out_model_path = '/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_with_pretrain_long.h5'
+    pretrain_model_path = '/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_with_pretrain.h5'
 
     epochs = 400
     patience = 50
@@ -25,7 +25,7 @@ def train_unet():
     # load from pretrained model
     if os.path.isfile(pretrain_model_path):
         model.load_weights(pretrain_model_path)
-        print('Loading weights from pretrained on synth data')
+        print('Loading weights from pretrained model')
 
     #optim = SGD(lr=learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
     optim = Adam(lr=learning_rate)
@@ -34,7 +34,7 @@ def train_unet():
 
     callbacks = [
         EarlyStopping(monitor='val_loss', patience=patience, verbose=0),
-        ModelCheckpoint('/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_with_pretrain_temp.h5',
+        ModelCheckpoint('/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_with_pretrain_long_temp.h5',
                         monitor='val_loss', save_best_only=True, verbose=0),
     ]
 
@@ -49,7 +49,7 @@ def train_unet():
         callbacks=callbacks)
 
     model.save_weights(out_model_path)
-    pd.DataFrame(history.history).to_csv('/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_train_with_pretrain.csv',
+    pd.DataFrame(history.history).to_csv('/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_train_with_pretrain_long.csv',
                                          index=False)
     print('Training is finished (weights unet_224.h5 and log unet_224_train.csv are generated )...')
 
