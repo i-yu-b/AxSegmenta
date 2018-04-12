@@ -14,7 +14,7 @@ from data_generator import *
 
 def train_unet():
     out_model_path = '/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_with_pretrain.h5'
-    pretrain_model_path = '/notebooks/b.irina/AxSegmenta/synthetic-pretrained/zf_unet_224.h5'
+    pretrain_model_path = '/notebooks/b.irina/AxSegmenta/ZF_UNET_224_Pretrained_Model-master/zf_unet_224.h5'
 
     epochs = 400
     patience = 20
@@ -34,7 +34,8 @@ def train_unet():
 
     callbacks = [
         EarlyStopping(monitor='val_loss', patience=patience, verbose=0),
-        ModelCheckpoint('unet_224_temp.h5', monitor='val_loss', save_best_only=True, verbose=0),
+        ModelCheckpoint('/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_with_pretrain_temp.h5',
+                        monitor='val_loss', save_best_only=True, verbose=0),
     ]
 
     print('Start training...')
@@ -48,7 +49,8 @@ def train_unet():
         callbacks=callbacks)
 
     model.save_weights(out_model_path)
-    pd.DataFrame(history.history).to_csv('unet_224_train_with_pretrain.csv', index=False)
+    pd.DataFrame(history.history).to_csv('/notebooks/b.irina/AxSegmenta/checkpoints/unet_224_train_with_pretrain.csv',
+                                         index=False)
     print('Training is finished (weights unet_224.h5 and log unet_224_train.csv are generated )...')
 
 if __name__ == '__main__':
