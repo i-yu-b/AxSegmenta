@@ -25,6 +25,7 @@ def train_unet():
     # load from pretrained model
     if os.path.isfile(pretrain_model_path):
         model.load_weights(pretrain_model_path)
+        print('Loading weights from pretrained on synth data')
 
     #optim = SGD(lr=learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
     optim = Adam(lr=learning_rate)
