@@ -17,7 +17,7 @@ def train_unet():
     pretrain_model_path = '/notebooks/b.irina/AxSegmenta/ZF_UNET_224_Pretrained_Model-master/zf_unet_224.h5'
 
     epochs = 400
-    patience = 20
+    patience = 50
     batch_size = 12
     learning_rate = 0.001
     model = unet_224()
