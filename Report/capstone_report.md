@@ -114,39 +114,55 @@ As U-net was originally designed for electron microscopy segmentation tasks, I'v
 </p>
 
 I have used the original architecture with some modification: 6 convolutional layers in both encoder and decoder, with
-32, 64, 128, 256, 512 and 1024 filter. The detailed architecture with all the parameters is the following:
+32, 64, 128, 256, 512 and 1024 filter. The detailed architecture with all the parameters could be found in Methodogy section.
+
+### Benchmark
+As a benchmark model, I used two approaches which are often employed as a good start for manual and
+semi-automatic methods - global thresholding and Otsu's thresholding. [14]
+Global thresholding method is really simple and straighforward: all pixels falling below the threshold = 1 and are considered myelin, while
+all pixels above the threshold = 0 and are considered non-myelin. While
+this technique was a good start, it does not work consistently, produces not smooth, sharp masks with many artifacts.
+Global threshold was chosen manually to satisfy most of the images and was equal to 90.
+
+Otsu's thresholding assumes that the image contains two classes of pixels following bi-modal histogram
+(myelin pixels and background pixels), it then calculates the optimum threshold separating the two classes so that their
+combined spread (intra-class variance) is minimal, or equivalently (because the sum of pairwise squared distances is constant),
+ so that their inter-class variance is maximal.
+
+<p align="center">
+    <img align="center" src="https://github.com/i-yu-b/AxSegmenta/blob/master/Report/image_global_thr.png" width="500" hspace="10"/>
+</p>
+
+I used OpenCV implementation for both methods. [15] As you can see on the image, both methods're having troubles with proper
+segmentation, as there are impurities on the images of the same color as myelin, the brightness and contrast of images
+significantly varies from image to image. Calculated dice coefficients (averaged across the whole dataset) for masks
+produced using 1) global thresholding method = 0.589; 2)Otsu's thresholding = 0.687.
+
+## III. Methodology
+
+### Data Preprocessing
+There was no specific image preprocessing. The only one: all input images were normalized to maximum (255) and substracted
+center value (0.5), all masks were normalized to maximum (255) as well. I wrote custom data generator for mini-batch
+training (data_generator.py), which read corresponding number of images and masks, preprocesses them and forms a batch.
+
+### Implementation
+
+All code was writen in Keras 2.1.3+ Tensorflow 1.7.0 with GPU support. All the required packages and their versions could be found in
+requirements.txt. For training I used GeForce GTX TITAN GPU 12 Gb.
+
+As it was said earlier, I used U-net-like architechure with 6 convolutional layers in both encoder and decoder, with
+32, 64, 128, 256, 512 and 1024 filter. The model is written using Keras core layers and placed in model.py file.
+The detailed architecture is the following:
 <p align="center">
     <img align="center" src="https://github.com/i-yu-b/AxSegmenta/blob/master/Report/model.png" width="500" hspace="10"/>
 </p>
 
-### Benchmark
-As a benchmark model, I will use an approach which is often employed as a good start for manual and
-semi-automatic methods - global thresholding. []
-The general idea is to apply a threshold to each image based on the nadir of the histogram between the two peaks of myelin and non-myelin pixels. Since the myelin is stained in histology images, it is dark in the image and captured in the first signal peak.
-In the binary image, all pixels falling below the threshold = 1 and are considered myelin, while
-all pixels above the threshold = 0 and are considered non-myelin. While
-this technique was a good start, it does not work consistently, produces not smooth, sharp masks
-
-
-In this section, you will need to provide a clearly defined benchmark result or threshold for comparing across performances obtained by your solution. The reasoning behind the benchmark (in the case where it is not an established result) should be discussed. Questions to ask yourself when writing this section:
-- _Has some result or value been provided that acts as a benchmark for measuring performance?_
-- _Is it clear how this result or value was obtained (whether by data or by hypothesis)?_
-
-
-## III. Methodology
-_(approx. 3-5 pages)_
-
-### Data Preprocessing
-In this section, all of your preprocessing steps will need to be clearly documented, if any were necessary. From the previous section, any of the abnormalities or characteristics that you identified about the dataset will be addressed and corrected here. Questions to ask yourself when writing this section:
-- _If the algorithms chosen require preprocessing steps like feature selection or feature transformations, have they been properly documented?_
-- _Based on the **Data Exploration** section, if there were abnormalities or characteristics that needed to be addressed, have they been properly corrected?_
-- _If no preprocessing is needed, has it been made clear why?_
-
-### Implementation
-In this section, the process for which metrics, algorithms, and techniques that you implemented for the given data will need to be clearly documented. It should be abundantly clear how the implementation was carried out, and discussion should be made regarding any complications that occurred during this process. Questions to ask yourself when writing this section:
-- _Is it made clear how the algorithms and techniques were implemented with the given datasets or input data?_
-- _Were there any complications with the original metrics or techniques that required changing prior to acquiring a solution?_
-- _Was there any part of the coding process (e.g., writing complicated functions) that should be documented?_
+For training I used custom metric: dice coefficient and custom loss function, which is simply equal to -dice_coeff. Both,
+loss function and metrics are stored in losses.py file. The model was trained for 400 epochs with batch size equal to 12,
+Adam optimizer with learning rate 0.001. Training for one epoch takes approximately 100 seconds. All hyperparameters were optimized.
+All logs are save in unet_224_train.csv file and the final model is save to
+unet_224.h5 file. The best results are the following: dice coefficient for train dataset is equal to 0.9065 and 0.8962 for
+validation dataset.
 
 ### Refinement
 In this section, you will need to discuss the process of improvement you made upon the algorithms and techniques you used in your implementation. For example, adjusting parameters for certain models to acquire improved solutions would fall under the refinement category. Your initial and final solutions should be reported, as well as any significant intermediate results as necessary. Questions to ask yourself when writing this section:
@@ -231,4 +247,5 @@ NeuroImage 2016;125:1155–8.
 11. Dice LR. Measures of the amount of ecologic association between species. Ecology. 1945;26(3):297–302. doi: 10.2307/19324094
 12. [Olaf Ronneberger, Philipp Fischer, Thomas Brox. U-Net: Convolutional Networks for Biomedical Image Segmentation](https://arxiv.org/abs/1505.04597)
 13. [University of Freiburg. U-Net: Convolutional Networks for Biomedical Image Segmentation](https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/)
-
+14.  Nobuyuki Otsu (1979). "A threshold selection method from gray-level histograms". IEEE Trans. Sys., Man., Cyber. 9 (1): 62–66. doi:10.1109/TSMC.1979.4310076.
+15. [OpenCV Image Thresholding ] (https://docs.opencv.org/3.3.0/d7/d4d/tutorial_py_thresholding.html)
