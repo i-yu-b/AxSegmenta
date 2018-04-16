@@ -175,59 +175,82 @@ gaussian noise (generator code available in train_infinite_generator.py).
 The idea is that it's easy for neural net first to catch basic simple shape figures, and then, from the warm start to
 segment more complicated electron microscopy images. I've adopted the approach and slightly modified the net for grayscale
 images. The pre-training took around 90 minutes and achieved 0.9828 dice coefficient for synthetic data.
-After that, using the weights from pre-training, I've started training on electron microscopy data.
+After that, using the weights from pre-training, I've started training on electron microscopy data. As you can see from
+training logs, using pre-trained model help to achieve higher accuracy with shorter training time.
+<p align="center">
+    <img align="center" src="https://github.com/i-yu-b/AxSegmenta/blob/master/Report/logs.png" width="500" hspace="10"/>
+</p>
 
 
 ## IV. Results
-_(approx. 2-3 pages)_
+
 
 ### Model Evaluation and Validation
-In this section, the final model and any supporting qualities should be evaluated in detail. It should be clear how the final model was derived and why this model was chosen. In addition, some type of analysis should be used to validate the robustness of this model and its solution, such as manipulating the input data or environment to see how the model’s solution is affected (this is called sensitivity analysis). Questions to ask yourself when writing this section:
-- _Is the final model reasonable and aligning with solution expectations? Are the final parameters of the model appropriate?_
-- _Has the final model been tested with various inputs to evaluate whether the model generalizes well to unseen data?_
-- _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
-- _Can results found from the model be trusted?_
+
+The final model with optimized hyperparameters and with pre-training on synthetic data produced really good, high-quality
+segmentation masks with dice coefficient on train/validation/test dataset: 0.9553 / 0.8905 / 0.8594.
+If you look at the examples of predicted masks, you can see that they have nice, smooth boarder with lack of artefacts.
+
+<p align="center">
+    <img align="center" src="https://github.com/i-yu-b/AxSegmenta/blob/master/Report/predicted_masks.png" width="500" hspace="10"/>
+</p>
+
+<p align="center">
+    <img align="center" src="https://github.com/i-yu-b/AxSegmenta/blob/master/Report/predicted_masks_2.png" width="500" hspace="10"/>
+</p>
+
+<p align="center">
+    <img align="center" src="https://github.com/i-yu-b/AxSegmenta/blob/master/Report/predicted_masks_3.png" width="500" hspace="10"/>
+</p>
+
 
 ### Justification
-In this section, your model’s final solution and its results should be compared to the benchmark you established earlier in the project using some type of statistical analysis. You should also justify whether these results and the solution are significant enough to have solved the problem posed in the project. Questions to ask yourself when writing this section:
-- _Are the final results found stronger than the benchmark result reported earlier?_
-- _Have you thoroughly analyzed and discussed the final solution?_
-- _Is the final solution significant enough to have solved the problem?_
+
+As you can simply see from the image analysis, the quality of the masks predicted using deep learning approach is significantly
+better than benchmark model: they have nice smooth boarders, do not include artefacts from dark background, do not fail in case of overlapping
+a few myelin layers. Dice coefficient is also significantly higher: 0.839715 vs  0.687.
 
 
 ## V. Conclusion
 _(approx. 1-2 pages)_
 
 ### Free-Form Visualization
-In this section, you will need to provide some form of visualization that emphasizes an important quality about the project. It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want to discuss. Questions to ask yourself when writing this section:
+The
+In this section, you will need to provide some form of visualization that emphasizes an important quality about the project.
+It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want
+ to discuss. Questions to ask yourself when writing this section:
+
 - _Have you visualized a relevant or important quality about the problem, dataset, input data, or results?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+
 
 ### Reflection
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
+The final goal of this project was to solve binary segmentation challenge of electron  microscopy images in order to segment
+myelin from the background. I used U-ned encoder-decoder
+
+In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects
+of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that
+you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
+
 - _Have you thoroughly summarized the entire process you used for this project?_
 - _Were there any interesting aspects of the project?_
 - _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
+- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to
+solve these types of problems?_
 
 ### Improvement
-In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved. As an example, consider ways your implementation can be made more general, and what would need to be modified. You do not need to make this improvement, but the potential solutions resulting from these changes are considered and compared/contrasted to your current solution. Questions to ask yourself when writing this section:
-- _Are there further improvements that could be made on the algorithms or techniques you used in this project?_
-- _Were there algorithms or techniques you researched that you did not know how to implement, but would consider using if you knew how?_
-- _If you used your final solution as the new benchmark, do you think an even better solution exists?_
-
------------
-
-**Before submitting, ask yourself. . .**
-
-- Does the project report you’ve written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Analysis** and **Methodology**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your analysis, methods, and results?
-- Have you properly proof-read your project report to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
-- Is the code that implements your solution easily readable and properly commented?
-- Does the code execute without error and produce results similar to those reported?
+In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved.
+As an example, consider ways your implementation can be made more general, and what would need to be modified.
+You do not need to make this improvement, but the potential solutions resulting from these changes are considered and
+compared/contrasted to your current solution. Questions to ask yourself when writing this section:
+One of the significant limitations to achieve a higher quality of the model is lack of labeled data. Typically for segmentation
+tasks one need starting from 10k images or so. But getting biological data is always expensive and time-consuming problem.
+Another issue I had, that manually (using semi-automated methods) labeled masks are far away from perfection, so it's hard
+to expect from the model to have really high quality predicted masks if it was trained on not perfect labels.
+One of the main improvements besides getting more data and correcting labels, would be to use data augumentation such as
+affine transformations, zooming, flipping and shifting, as there's a significant variation in myelin shape and size, it would
+be helpful for the neural net robustness if it trains on more diverse training data.
+Also if I had more computational power I would definitely try to increase the number of convolutional layers in the architecture
+to get finer features.
 
 ### References
 1. Morell P, Quarles R, Norton W. Formation, structure, and biochemistry of myelin. In: 4th ed.
