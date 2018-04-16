@@ -1,7 +1,7 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
-Joe Udacity  
-April 12th, 2018
+Irina Barskaya
+April 16th, 2018
 
 ## I. Definition
 
@@ -208,40 +208,27 @@ If you look at the examples of predicted masks, you can see that they have nice,
 
 As you can simply see from the image analysis, the quality of the masks predicted using deep learning approach is significantly
 better than benchmark model: they have nice smooth boarders, do not include artefacts from dark background, do not fail in case of overlapping
-a few myelin layers. Dice coefficient is also significantly higher: 0.839715 vs  0.687.
+a few myelin layers. Dice coefficient is also significantly higher: 0.8397 vs  0.687.
 
 
 ## V. Conclusion
 _(approx. 1-2 pages)_
 
 ### Free-Form Visualization
-The
-In this section, you will need to provide some form of visualization that emphasizes an important quality about the project.
-It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want
- to discuss. Questions to ask yourself when writing this section:
+The overall results of predicted segmentation masks is good. Also the model generalizes well and is not overfitted.
+<p align="center">
+<img align="center" src="https://github.com/i-yu-b/AxSegmenta/blob/master/Report/predicted_masks_3.png" width="500" hspace="10"/>
+</p>
+For example, if you look at the patched image 3 from the image above, you can notice that there is a mistake in ground truth label and two myelin sheath at the bottom are not presented in this particular image, but the model does see them and segments them properly.
 
-- _Have you visualized a relevant or important quality about the problem, dataset, input data, or results?_
+
 
 
 ### Reflection
 The final goal of this project was to solve binary segmentation challenge of electron  microscopy images in order to segment
-myelin from the background. I used U-ned encoder-decoder
-
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects
-of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that
-you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
-
-- _Have you thoroughly summarized the entire process you used for this project?_
-- _Were there any interesting aspects of the project?_
-- _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to
-solve these types of problems?_
+myelin from the background. I used deep learning approach with U-net--like encoder-decoder architecture, which is extremely successful neural net architecture for segmentation tasks, especially in biomedical applications. After tuning the hyperparameters and adding pre-training on simpler synthetic data, the model achieved really good quality with dice coefficient on test set equals to 0.8397. From image analysis one can see that the quality of masks is good, they correspond well to ground truth labels, almost do not have any artifacts, even in case of challenging images, where dark similar to myelin shape different impurities were presented.
 
 ### Improvement
-In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved.
-As an example, consider ways your implementation can be made more general, and what would need to be modified.
-You do not need to make this improvement, but the potential solutions resulting from these changes are considered and
-compared/contrasted to your current solution. Questions to ask yourself when writing this section:
 One of the significant limitations to achieve a higher quality of the model is lack of labeled data. Typically for segmentation
 tasks one need starting from 10k images or so. But getting biological data is always expensive and time-consuming problem.
 Another issue I had, that manually (using semi-automated methods) labeled masks are far away from perfection, so it's hard
