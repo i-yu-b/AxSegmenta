@@ -217,7 +217,7 @@ _(approx. 1-2 pages)_
 ### Free-Form Visualization
 The overall results of predicted segmentation masks is good. Also the model generalizes well and is not overfitted.
 <p align="center">
-<img align="center" src="https://github.com/i-yu-b/AxSegmenta/blob/master/Report/predicted_masks_3.png" width="500" hspace="10"/>
+<img align="center" src="https://github.com/i-yu-b/AxSegmenta/blob/master/Report/predicted_masks_4.png" width="500" hspace="10"/>
 </p>
 For example, if you look at the patched image 3 from the image above, you can notice that there is a mistake in ground truth label and two myelin sheath at the bottom are not presented in this particular image, but the model does see them and segments them properly.
 
