@@ -165,10 +165,17 @@ unet_224.h5 file. The best results are the following: dice coefficient for train
 validation dataset.
 
 ### Refinement
-In this section, you will need to discuss the process of improvement you made upon the algorithms and techniques you used in your implementation. For example, adjusting parameters for certain models to acquire improved solutions would fall under the refinement category. Your initial and final solutions should be reported, as well as any significant intermediate results as necessary. Questions to ask yourself when writing this section:
-- _Has an initial solution been found and clearly reported?_
-- _Is the process of improvement clearly documented, such as what techniques were used?_
-- _Are intermediate and final solutions clearly reported as the process is improved?_
+When searching on different improvement options, I found that pre-training on synthetic data is extremely helpful. Therefore,
+I used an approach suggested by Kaggle user ZFTurbo [16] to train the model first on synthetic dat.
+During pre-training, random images are synthesized as a combination of ellipse-shape figures of random color + background color +
+gaussian noise (generator code available in train_infinite_generator.py).
+<p align="center">
+    <img align="center" src="https://github.com/ZFTurbo/ZF_UNET_224_Pretrained_Model/blob/master/img/ZF_UNET_Generator_Images_Example.png" width="500" hspace="10"/>
+</p>
+The idea is that it's easy for neural net first to catch basic simple shape figures, and then, from the warm start to
+segment more complicated electron microscopy images. I've adopted the approach and slightly modified the net for grayscale
+images. The pre-training took around 90 minutes and achieved 0.9828 dice coefficient for synthetic data.
+After that, using the weights from pre-training, I've started training on electron microscopy data.
 
 
 ## IV. Results
@@ -249,3 +256,4 @@ NeuroImage 2016;125:1155–8.
 13. [University of Freiburg. U-Net: Convolutional Networks for Biomedical Image Segmentation](https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/)
 14.  Nobuyuki Otsu (1979). "A threshold selection method from gray-level histograms". IEEE Trans. Sys., Man., Cyber. 9 (1): 62–66. doi:10.1109/TSMC.1979.4310076.
 15. [OpenCV Image Thresholding ] (https://docs.opencv.org/3.3.0/d7/d4d/tutorial_py_thresholding.html)
+16. [Pre-training on synthetic data for segmentation tasks] (https://github.com/ZFTurbo/ZF_UNET_224_Pretrained_Model)
